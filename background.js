@@ -1,17 +1,13 @@
-let copyHistory = [];
-
-chrome.runtime.onInstalled.addListener(() => {
-  chrome.storage.local.set({ copyHistory: [] });
-});
-
-document.addEventListener('copy', () => {
-    const copiedText = document.getSelection().toString();
-
-    if (copiedText) {
-        chrome.storage.local.get('copyHistory', (data) => {
-            copyHistory = data.copyHistory;
-            copyHostpry.unshift(copiedText);
-            chrome.storage.local.set({ copyHistory });
-        });
+chrome.runtime.onMessage.addListener((message) => {
+    if (message.type === 'COPIED_TEXT') {
+      const copiedText = message.text;
+  
+      // Retrieve existing history from storage and add the new text
+      chrome.storage.local.get('copyHistory', (data) => {
+        const copyHistory = data.copyHistory || [];
+        copyHistory.unshift(copiedText); // Add new text to the start of the array
+        chrome.storage.local.set({ copyHistory });
+      });
     }
-});
+  });
+  
