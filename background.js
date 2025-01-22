@@ -1,3 +1,5 @@
+// Developed by Olivia Zhang (Github: https://github.com/zhangolivia7/CTRL-See)
+
 chrome.runtime.onMessage.addListener((message) => {
   if (message.type === 'COPIED_TEXT') {
     const copiedText = message.text;

@@ -1,3 +1,5 @@
+// Developed by Olivia Zhang (Github: https://github.com/zhangolivia7/CTRL-See)
+
 document.addEventListener('copy', () => {
   const copiedText = document.getSelection().toString();
   if (copiedText) {

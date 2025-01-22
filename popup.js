@@ -1,3 +1,5 @@
+// Developed by Olivia Zhang (Github: https://github.com/zhangolivia7/CTRL-See)
+
 document.addEventListener('DOMContentLoaded', () => {
   const historyList = document.getElementById('history');
   const clearButton = document.getElementById('clear-history');
