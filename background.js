@@ -7,7 +7,7 @@ chrome.runtime.onMessage.addListener((message) => {
     // Retrieve existing history from storage and add new text
     chrome.storage.local.get('copyHistory', (data) => {
       const copyHistory = data.copyHistory || [];
-      copyHistory.unshift(copiedText); // Add new text to start of array
+      copyHistory.unshift(copiedText);
       chrome.storage.local.set({ copyHistory });
     });
   }

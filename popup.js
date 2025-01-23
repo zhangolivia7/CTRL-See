@@ -12,6 +12,31 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // Automatically read clipboard when popup is opened
+  setTimeout(() => {
+    navigator.clipboard.readText().then((clipboardText) => {
+      clipboardText = clipboardText.trim(); // Clean up text
+      if (clipboardText) {
+        chrome.storage.local.get('copyHistory', (data) => {
+          const copyHistory = data.copyHistory || [];
+
+          // Avoid duplicates
+          if (copyHistory[0] !== clipboardText) {
+            copyHistory.unshift(clipboardText);
+            chrome.storage.local.set({ copyHistory }, () => {
+              historyList.innerHTML = ''; // Clear list
+              copyHistory.forEach((text, index) => {
+                addListItem(historyList, text, index);
+              });
+            });
+          }
+        });
+      }
+    }).catch((error) => {
+      console.error('Clipboard access error:', error);
+    });
+  }, 200);
+
   // Clear history when button clicked
   clearButton.addEventListener('click', () => {
     chrome.storage.local.set({ copyHistory: [] }, () => {
@@ -19,14 +44,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Function to add new list item
+  // Add new list item
   function addListItem(list, text, index) {
     const listItem = document.createElement('li');
 
     // Create text container
     const textContainer = document.createElement('span');
     textContainer.textContent = text;
-    textContainer.style.flex = '1'; // Make the text take up the available space
+    textContainer.style.flex = '1';
 
     // Create copy icon
     const copyIcon = document.createElement('span');
@@ -60,21 +85,13 @@ document.addEventListener('DOMContentLoaded', () => {
     listItem.appendChild(copyIcon);
     listItem.appendChild(deleteIcon);
 
-    // Append the list item to list
+    // Append list item to list
     list.appendChild(listItem);
   }
 
-  // Function for copied notif
+  // Function for copied notification
   function showNotification(message) {
-    // Check if a notification already exists and remove it
-    const existingNotification = document.getElementById('notification');
-    if (existingNotification) {
-      existingNotification.remove();
-    }
-
-    // Create notification element
     const notification = document.createElement('div');
-    notification.id = 'notification';
     notification.textContent = message;
     notification.style.position = 'fixed';
     notification.style.top = '50%';
@@ -85,11 +102,8 @@ document.addEventListener('DOMContentLoaded', () => {
     notification.style.padding = '10px 20px';
     notification.style.borderRadius = '8px';
     notification.style.zIndex = '1000';
-    notification.style.fontSize = '14px';
     notification.style.opacity = '0';
     notification.style.transition = 'opacity 0.3s ease';
-
-    // Append notification to the body
     document.body.appendChild(notification);
 
     // Fade in
@@ -97,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
       notification.style.opacity = '1';
     }, 10);
 
-    // Remove notif after 1 second
+    // Remove after delay
     setTimeout(() => {
       notification.style.opacity = '0';
       setTimeout(() => {
