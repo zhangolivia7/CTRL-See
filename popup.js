@@ -48,10 +48,23 @@ document.addEventListener('DOMContentLoaded', () => {
   function addListItem(list, text, index) {
     const listItem = document.createElement('li');
 
-    // Create text container
-    const textContainer = document.createElement('span');
-    textContainer.textContent = text;
-    textContainer.style.flex = '1';
+    // Create a container for the content
+    const contentContainer = document.createElement('span');
+    contentContainer.style.flex = '1';
+
+    // Check if the text is a URL
+    const urlPattern = /^(https?:\/\/[^\s]+)$/;
+    if (urlPattern.test(text)) {
+      const link = document.createElement('a');
+      link.href = text;
+      link.textContent = text;
+      link.target = '_blank'; 
+      link.className = 'link';
+      contentContainer.appendChild(link);
+    } else {
+      contentContainer.textContent = text;
+    }
+    
 
     // Create copy icon
     const copyIcon = document.createElement('span');
@@ -80,8 +93,8 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
-    // Append text and icons to list item
-    listItem.appendChild(textContainer);
+    // Append content and icons to list item
+    listItem.appendChild(contentContainer);
     listItem.appendChild(copyIcon);
     listItem.appendChild(deleteIcon);
 

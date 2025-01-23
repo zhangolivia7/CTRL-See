@@ -93,3 +93,17 @@ button:active {
   font-family: Arial, sans-serif;
   text-align: center;
 }
+
+.link {
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+  display: inline-block;
+  color: #3a5a40;
+  text-decoration: underline;
+}
+
+.link:hover {
+  color: #588157;
+}
